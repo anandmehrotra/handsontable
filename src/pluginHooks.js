@@ -605,6 +605,11 @@ const REGISTERED_HOOKS = [
   'persistentStateSave',
 
   /**
+   * @event Hooks#processValueInsidePopulate
+   */
+  'processValueInsidePopulate',
+
+  /**
    * @event Hooks#beforeColumnSort
    * @param {Number} column Sorted column index.
    * @param {Boolean} order Soring order where:

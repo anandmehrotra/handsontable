@@ -468,6 +468,9 @@ Handsontable.Core = function Core(rootElement, userSettings) {
                   value = typeof (result.value) === 'undefined' ? value : result.value;
                 }
               }
+
+              value = instance.runHooks('processValueInsidePopulate', value, cellMeta);
+
               if (value !== null && typeof value === 'object') {
                 if (orgValue === null || typeof orgValue !== 'object') {
                   pushData = false;
