@@ -15,6 +15,7 @@ import {arrayEach} from './../../helpers/array';
 import {Cursor} from './cursor';
 import {EventManager} from './../../eventManager';
 import {extend, isObject, objectEach, mixin} from './../../helpers/object';
+import {debounce} from './../../helpers/function';
 import {isSeparator, isDisabled, isSelectionDisabled, hasSubMenu, normalizeSelection} from './utils';
 import {KEY_CODES} from './../../helpers/unicode';
 import {localHooks} from './../../mixins/localHooks';
@@ -36,6 +37,12 @@ class Menu {
     this.parentMenu = this.options.parent || null;
     this.menuItems = null;
     this.origOutsideClickDeselects = null;
+    this.offset = {
+      above: 0,
+      below: 0,
+      left: 0,
+      right: 0,
+    };
     this._afterScrollCallback = null;
 
     this.registerEvents();
@@ -60,7 +67,17 @@ class Menu {
   }
 
   /**
-   * Check is menu is using as sub-menu.
+   * Set offset menu position for specified area (`above`, `below`, `left` or `right`).
+   *
+   * @param {String} area Specified area name (`above`, `below`, `left` or `right`).
+   * @param {Number} offset Offset value.
+   */
+  setOffset(area, offset = 0) {
+    this.offset[area] = offset;
+  }
+
+  /**
+   * Check if menu is using as sub-menu.
    *
    * @returns {Boolean}
    */
@@ -74,6 +91,8 @@ class Menu {
   open() {
     this.container.removeAttribute('style');
     this.container.style.display = 'block';
+
+    const delayedOpenSubMenu = debounce((row) => this.openSubMenu(row), 300);
 
     let settings = {
       data: this.menuItems,
@@ -89,7 +108,16 @@ class Menu {
       renderAllRows: true,
       fragmentSelection: 'cell',
       beforeKeyDown: (event) => this.onBeforeKeyDown(event),
-      afterOnCellMouseOver: (event, coords, TD) => this.openSubMenu(coords.row)
+      afterOnCellMouseOver: (event, coords, TD) => {
+        if (!TD.textContent) {
+          return;
+        }
+        if (this.isAllSubMenusClosed()) {
+          delayedOpenSubMenu(coords.row);
+        } else {
+          this.openSubMenu(coords.row);
+        }
+      }
     };
     this.origOutsideClickDeselects = this.hot.getSettings().outsideClickDeselects;
     this.hot.getSettings().outsideClickDeselects = false;
@@ -124,12 +152,15 @@ class Menu {
   }
 
   /**
-   * Open sub menu at row index.
+   * Open sub menu at the provided row index.
    *
    * @param {Number} row Row index.
    * @returns {Menu|Boolean} Returns created menu or `false` if no one menu was created.
    */
   openSubMenu(row) {
+    if (!this.hotMenu) {
+      return;
+    }
     let cell = this.hotMenu.getCell(row, 0);
 
     this.closeAllSubMenus();
@@ -141,7 +172,8 @@ class Menu {
     let subMenu = new Menu(this.hot, {
       parent: this,
       name: dataItem.name,
-      className: this.options.className
+      className: this.options.className,
+      keepInViewport: true,
     });
     subMenu.setMenuItems(dataItem.submenu.items);
     subMenu.open();
@@ -260,14 +292,13 @@ class Menu {
   /**
    * Set menu position above cursor object.
    *
-   * @param {Cursor} cursor
+   * @param {Cursor} cursor `Cursor` object.
    */
   setPositionAboveCursor(cursor) {
-    let top = cursor.top - this.container.offsetHeight;
+    let top = this.offset.above + cursor.top - this.container.offsetHeight;
 
-    /* jshint -W020 */
     if (this.isSubMenu()) {
-      top = window.scrollY + cursor.top + cursor.cellHeight - this.container.offsetHeight + 3;
+      top = cursor.top + cursor.cellHeight - this.container.offsetHeight + 3;
     }
     this.container.style.top = top + 'px';
   }
@@ -275,14 +306,13 @@ class Menu {
   /**
    * Set menu position below cursor object.
    *
-   * @param {Cursor} cursor
+   * @param {Cursor} cursor `Cursor` object.
    */
   setPositionBelowCursor(cursor) {
-    let top = cursor.top - 1;
+    let top = this.offset.below + cursor.top;
 
-    /* jshint -W020 */
     if (this.isSubMenu()) {
-      top = cursor.top + window.scrollY - 1;
+      top = cursor.top - 1;
     }
     this.container.style.top = top + 'px';
   }
@@ -290,26 +320,29 @@ class Menu {
   /**
    * Set menu position on the right of cursor object.
    *
-   * @param {Cursor} cursor
+   * @param {Cursor} cursor `Cursor` object.
    */
   setPositionOnRightOfCursor(cursor) {
     let left;
 
     if (this.isSubMenu()) {
-      left = window.scrollX + 1 + cursor.left + cursor.cellWidth;
+      left = 1 + cursor.left + cursor.cellWidth;
     } else {
-      left = 1 + cursor.left;
+      left = this.offset.right + 1 + cursor.left;
     }
+
     this.container.style.left = left + 'px';
   }
 
   /**
    * Set menu position on the left of cursor object.
    *
-   * @param {Cursor} cursor
+   * @param {Cursor} cursor `Cursor` object.
    */
   setPositionOnLeftOfCursor(cursor) {
-    this.container.style.left = (cursor.left - this.container.offsetWidth + getScrollbarWidth() + 4) + 'px';
+    let left = this.offset.left + cursor.left - this.container.offsetWidth + getScrollbarWidth() + 4;
+
+    this.container.style.left = left + 'px';
   }
 
   /**
@@ -343,7 +376,7 @@ class Menu {
    * Select next cell in opened menu.
    *
    * @param {Number} row Row index.
-   * @param {Number} col Column indx.
+   * @param {Number} col Column index.
    */
   selectNextCell(row, col) {
     let nextRow = row + 1;
@@ -459,7 +492,7 @@ class Menu {
    * Create container/wrapper for handsontable.
    *
    * @private
-   * @param {String} [name] Class name
+   * @param {String} [name] Class name.
    * @returns {HTMLElement}
    */
   createContainer(name = null) {
