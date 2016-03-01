@@ -19818,6 +19818,12 @@ CopyPasteClass.prototype.onKeyDown = function(event) {
     }, 0);
   }
   if (isCtrlDown && (event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88)) {
+    // Eighspokes: special handling fragment
+    $("#mainTable").trigger("handsOnTable:copyPasteKeyDown", event);
+    if (event.aborted)
+      return;
+    // Eightspokes: end fragment
+
     if (event.keyCode === 88) {
       setTimeout(function() {
         _this.triggerCut(event);
