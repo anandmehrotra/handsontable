@@ -4056,7 +4056,7 @@ var domHelpers = ($__helpers_47_dom_47_element__ = require("helpers/dom/element"
 var domEventHelpers = ($__helpers_47_dom_47_event__ = require("helpers/dom/event"), $__helpers_47_dom_47_event__ && $__helpers_47_dom_47_event__.__esModule && $__helpers_47_dom_47_event__ || {default: $__helpers_47_dom_47_event__});
 var HELPERS = [arrayHelpers, browserHelpers, dataHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers, settingHelpers, stringHelpers, unicodeHelpers];
 var DOM = [domHelpers, domEventHelpers];
-Handsontable.buildDate = 'Wed Feb 10 2016 19:13:04 GMT-0500 (EST)';
+Handsontable.buildDate = 'Thu Mar 03 2016 13:16:12 GMT-0500 (EST)';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.21.0';
 var baseVersion = '@@baseVersion';
@@ -13383,6 +13383,7 @@ var $Menu = Menu;
   createContainer: function() {
     var name = arguments[0] !== (void 0) ? arguments[0] : null;
     if (name) {
+      name = name.replace(/(<([^>]+)>)/ig, "").trim();
       name = name.replace(/ /g, '_');
       name = this.options.className + 'Sub_' + name;
     }
@@ -19818,12 +19819,9 @@ CopyPasteClass.prototype.onKeyDown = function(event) {
     }, 0);
   }
   if (isCtrlDown && (event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88)) {
-    // Eighspokes: special handling fragment
-    $("#mainTable").trigger("handsOnTable:copyPasteKeyDown", event);
+    $(".ht_master.handsontable").trigger("handsOnTable:copyPasteKeyDown", event);
     if (event.aborted)
       return;
-    // Eightspokes: end fragment
-
     if (event.keyCode === 88) {
       setTimeout(function() {
         _this.triggerCut(event);
@@ -21077,5 +21075,5 @@ if (typeof exports !== "undefined") {
 }).call(window);
 
 //# 
-},{}]},{},[23,59,60,61,62,83,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,84,85,86,87,100,101,102,90,91,92,93,94,95,31,35,32,33,40,34,36,37,38,39])("numeral")
+},{}]},{},[23,59,61,60,62,83,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,84,85,86,87,100,101,102,90,91,92,93,94,95,31,35,32,33,40,34,36,37,38,39])("numeral")
 });

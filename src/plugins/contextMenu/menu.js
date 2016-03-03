@@ -497,6 +497,7 @@ class Menu {
    */
   createContainer(name = null) {
     if (name) {
+      name = name.replace(/(<([^>]+)>)/ig,"").trim();
       name = name.replace(/ /g, '_');
       name = this.options.className + 'Sub_' + name;
     }
