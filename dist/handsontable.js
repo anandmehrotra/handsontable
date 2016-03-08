@@ -4056,7 +4056,7 @@ var domHelpers = ($__helpers_47_dom_47_element__ = require("helpers/dom/element"
 var domEventHelpers = ($__helpers_47_dom_47_event__ = require("helpers/dom/event"), $__helpers_47_dom_47_event__ && $__helpers_47_dom_47_event__.__esModule && $__helpers_47_dom_47_event__ || {default: $__helpers_47_dom_47_event__});
 var HELPERS = [arrayHelpers, browserHelpers, dataHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers, settingHelpers, stringHelpers, unicodeHelpers];
 var DOM = [domHelpers, domEventHelpers];
-Handsontable.buildDate = 'Thu Mar 03 2016 13:16:12 GMT-0500 (EST)';
+Handsontable.buildDate = 'Tue Mar 08 2016 16:27:05 GMT-0500 (EST)';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.21.0';
 var baseVersion = '@@baseVersion';
@@ -18779,6 +18779,9 @@ function TableView(instance) {
           var nothing = 1;
         } else if (event.shiftKey) {
           if (coords.row >= 0 && coords.col >= 0) {
+            instance.selection.setRangeEnd(coords);
+          } else if (coords.col < 0) {
+            coords.col = instance.countCols() - 1;
             instance.selection.setRangeEnd(coords);
           }
         } else {

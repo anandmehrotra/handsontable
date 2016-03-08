@@ -302,6 +302,9 @@ function TableView(instance) {
         } else if (event.shiftKey) {
           if (coords.row >= 0 && coords.col >= 0) {
             instance.selection.setRangeEnd(coords);
+          } else if (coords.col < 0) {
+            coords.col = instance.countCols() - 1
+            instance.selection.setRangeEnd(coords);
           }
         } else {
           if ((coords.row < 0 || coords.col < 0) && (coords.row >= 0 || coords.col >= 0)) {
