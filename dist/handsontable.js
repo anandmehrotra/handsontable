@@ -4056,7 +4056,7 @@ var domHelpers = ($__helpers_47_dom_47_element__ = require("helpers/dom/element"
 var domEventHelpers = ($__helpers_47_dom_47_event__ = require("helpers/dom/event"), $__helpers_47_dom_47_event__ && $__helpers_47_dom_47_event__.__esModule && $__helpers_47_dom_47_event__ || {default: $__helpers_47_dom_47_event__});
 var HELPERS = [arrayHelpers, browserHelpers, dataHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers, settingHelpers, stringHelpers, unicodeHelpers];
 var DOM = [domHelpers, domEventHelpers];
-Handsontable.buildDate = 'Tue Mar 08 2016 16:27:05 GMT-0500 (EST)';
+Handsontable.buildDate = 'Tue Mar 15 2016 13:53:17 GMT-0400 (EDT)';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.21.0';
 var baseVersion = '@@baseVersion';
@@ -5842,9 +5842,11 @@ DefaultSettings.prototype = {
       if (value !== '' && value !== null && typeof value !== 'undefined') {
         if (typeof value === 'object') {
           meta = this.getCellMeta(row, col);
-          return isObjectEquals(this.getSchema()[meta.prop], value);
+          if (!isObjectEquals(this.getSchema()[meta.prop], value))
+            return false;
+        } else {
+          return false;
         }
-        return false;
       }
     }
     return true;

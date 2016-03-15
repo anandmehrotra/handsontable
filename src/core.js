@@ -3650,10 +3650,11 @@ DefaultSettings.prototype = {
       if (value !== '' && value !== null && typeof value !== 'undefined') {
         if (typeof value === 'object') {
           meta = this.getCellMeta(row, col);
-
-          return isObjectEquals(this.getSchema()[meta.prop], value);
+          if (!isObjectEquals(this.getSchema()[meta.prop], value))
+            return false;
+        } else {
+          return false;
         }
-        return false;
       }
     }
 
