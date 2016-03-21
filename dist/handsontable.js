@@ -4056,7 +4056,7 @@ var domHelpers = ($__helpers_47_dom_47_element__ = require("helpers/dom/element"
 var domEventHelpers = ($__helpers_47_dom_47_event__ = require("helpers/dom/event"), $__helpers_47_dom_47_event__ && $__helpers_47_dom_47_event__.__esModule && $__helpers_47_dom_47_event__ || {default: $__helpers_47_dom_47_event__});
 var HELPERS = [arrayHelpers, browserHelpers, dataHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers, settingHelpers, stringHelpers, unicodeHelpers];
 var DOM = [domHelpers, domEventHelpers];
-Handsontable.buildDate = 'Tue Mar 15 2016 13:53:17 GMT-0400 (EDT)';
+Handsontable.buildDate = 'Mon Mar 21 2016 10:40:44 GMT-0400 (EDT)';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.21.0';
 var baseVersion = '@@baseVersion';
@@ -19824,7 +19824,7 @@ CopyPasteClass.prototype.onKeyDown = function(event) {
     }, 0);
   }
   if (isCtrlDown && (event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88)) {
-    $(".ht_master.handsontable").trigger("handsOnTable:copyPasteKeyDown", event);
+    $(".enlighten-handsontable").trigger("handsOnTable:copyPasteKeyDown", event);
     if (event.aborted)
       return;
     if (event.keyCode === 88) {
