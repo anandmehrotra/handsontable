@@ -1,6 +1,7 @@
 import BasePlugin from './../_base';
 import {arrayEach, arrayFilter} from './../../helpers/array';
-import {cancelAnimationFrame, requestAnimationFrame, isVisible} from './../../helpers/dom/element';
+import {cancelAnimationFrame, requestAnimationFrame} from './../../helpers/feature';
+import {isVisible} from './../../helpers/dom/element';
 import {GhostTable} from './../../utils/ghostTable';
 import {isObject, objectEach} from './../../helpers/object';
 import {valueAccordingPercent, rangeEach} from './../../helpers/number';
@@ -75,13 +76,13 @@ class AutoRowSize extends BasePlugin {
      */
     this.heights = [];
     /**
-     * Instance of GhostTable for rows and columns size calculations.
+     * Instance of {@link GhostTable} for rows and columns size calculations.
      *
      * @type {GhostTable}
      */
     this.ghostTable = new GhostTable(this.hot);
     /**
-     * Instance of SamplesGenerator for generating samples necessary for rows height calculations.
+     * Instance of {@link SamplesGenerator} for generating samples necessary for rows height calculations.
      *
      * @type {SamplesGenerator}
      */

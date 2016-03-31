@@ -368,7 +368,7 @@ const REGISTERED_HOOKS = [
    * A plugin hook executed after validator function, only if validator function is defined.
    * Validation result is the first parameter. This can be used to determinate if validation passed successfully or not.
    *
-   * __You can cancel current change by returning false.__
+   * __Returning false from the callback will mark the cell as invalid.__
    *
    * @event Hooks#afterValidate
    * @since 0.9.5
@@ -436,7 +436,7 @@ const REGISTERED_HOOKS = [
    * new Handsontable(document.getElementById('example'), {
    *   beforeChange: function(changes, source) {
    *     // [[row, prop, oldVal, newVal], ...]
-   *     changes[0][1] = 10;
+   *     changes[0][3] = 10;
    *   }
    * });
    * ...
@@ -526,6 +526,7 @@ const REGISTERED_HOOKS = [
    * @event Hooks#beforeRemoveCol
    * @param {Number} index Index of starter column.
    * @param {Number} amount Amount of columns to be removed.
+   * @param {Array} [logicalCols] Consists of logical indexes of processed columns.
    */
   'beforeRemoveCol',
 
@@ -535,6 +536,7 @@ const REGISTERED_HOOKS = [
    * @event Hooks#beforeRemoveRow
    * @param {Number} index Index of starter column.
    * @param {Number} amount Amount of columns to be removed.
+   * @param {Array} [logicalRows] Consists of logical indexes of processed rows.
    */
   'beforeRemoveRow',
 
@@ -602,6 +604,15 @@ const REGISTERED_HOOKS = [
    * @param {Number} col Column index.
    */
   'modifyCol',
+
+  /**
+   * Fired when a column index is about to be de-modified by a callback function.
+   *
+   * @event Hooks#unmodifyCol
+   * @since 0.23.0
+   * @param {Number} col Column index.
+   */
+    'unmodifyCol',
 
   /**
    * Fired when a column header index is about to be modified by a callback function.
@@ -677,12 +688,8 @@ const REGISTERED_HOOKS = [
   'persistentStateSave',
 
   /**
-   * @event Hooks#processValueInsidePopulate
-   */
-  'processValueInsidePopulate',
-
-  /**
-   * Fired before sorting the column.
+   * Fired before sorting the column. If you return `false` value then sorting will be not applied by
+   * Handsontable (useful for server-side sorting).
    *
    * @event Hooks#beforeColumnSort
    * @param {Number} column Sorted column index.
@@ -805,6 +812,32 @@ const REGISTERED_HOOKS = [
    * @param {Boolean} isDoubleClick Flag that determines whether there was a double-click.
    */
   'afterRowResize',
+
+  /**
+   * Fired after getting the column header renderers.
+   *
+   * @event Hooks#afterGetColumnHeaderRenderers
+   * @param {Array} array Array of the column header renderers.
+   */
+  'afterGetColumnHeaderRenderers',
+
+  /**
+   * Fired after getting the row header renderers.
+   *
+   * @event Hooks#afterGetRowHeaderRenderers
+   * @param {Array} array Array of the row header renderers.
+   */
+  'afterGetRowHeaderRenderers',
+
+  /**
+   * Fired before applying stretched column width to column.
+   *
+   * @event Hooks#beforeStretchingColumnWidth
+   * @param {Number} stretchedWidth Calculated width.
+   * @param {Number} column Column index.
+   * @returns {Number} Returns new width which will be applied to the column element.
+   */
+  'beforeStretchingColumnWidth',
 ];
 
 import {arrayEach} from './helpers/array';
@@ -892,7 +925,7 @@ class Hooks {
    */
   add(key, callback, context = null) {
     if (Array.isArray(callback)) {
-      arrayEach(callback, (c) => (this.add(key, c, context)));
+      arrayEach(callback, (c) => this.add(key, c, context));
 
     } else {
       const bucket = this.getBucket(context);
@@ -917,7 +950,7 @@ class Hooks {
    *
    * @see Core#addHookOnce
    * @param {String} key Hook/Event name.
-   * @param {Function} callback Callback function.
+   * @param {Function|Array} callback Callback function.
    * @param {Object} [context=null] A Handsontable instance.
    *
    * @example
@@ -927,7 +960,7 @@ class Hooks {
    */
   once(key, callback, context = null) {
     if (Array.isArray(callback)) {
-      arrayEach(callback, (c) => (this.once(key, c, context)));
+      arrayEach(callback, (c) => this.once(key, c, context));
 
     } else {
       callback.runOnce = true;
