@@ -2581,7 +2581,7 @@ var WalkontableOverlays = function WalkontableOverlays(wotInstance) {
     var headerColumnSize = this.wot.wtViewport.getColumnHeaderHeight();
     var hiderStyle = this.wot.wtTable.hider.style;
     hiderStyle.width = (headerRowSize + this.leftOverlay.sumCellSizes(0, totalColumns)) + 'px';
-    hiderStyle.height = (headerColumnSize + this.topOverlay.sumCellSizes(0, totalRows) + 1) + 'px';
+    hiderStyle.height = (headerColumnSize + this.topOverlay.sumCellSizes(0, totalRows) + 5) + 'px';
     this.topOverlay.adjustElementsSize(force);
     this.leftOverlay.adjustElementsSize(force);
     if (this.bottomOverlay.clone) {
@@ -4210,7 +4210,7 @@ var domHelpers = ($__helpers_47_dom_47_element__ = require("helpers/dom/element"
 var domEventHelpers = ($__helpers_47_dom_47_event__ = require("helpers/dom/event"), $__helpers_47_dom_47_event__ && $__helpers_47_dom_47_event__.__esModule && $__helpers_47_dom_47_event__ || {default: $__helpers_47_dom_47_event__});
 var HELPERS = [arrayHelpers, browserHelpers, dataHelpers, featureHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers, settingHelpers, stringHelpers, unicodeHelpers];
 var DOM = [domHelpers, domEventHelpers];
-Handsontable.buildDate = 'Thu Mar 31 2016 09:07:00 GMT-0400 (EDT)';
+Handsontable.buildDate = 'Fri Apr 01 2016 16:15:50 GMT-0400 (EDT)';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.24.1';
 var baseVersion = '@@baseVersion';

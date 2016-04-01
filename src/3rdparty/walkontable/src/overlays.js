@@ -619,7 +619,7 @@ class WalkontableOverlays {
     let hiderStyle = this.wot.wtTable.hider.style;
 
     hiderStyle.width = (headerRowSize + this.leftOverlay.sumCellSizes(0, totalColumns)) + 'px';
-    hiderStyle.height = (headerColumnSize + this.topOverlay.sumCellSizes(0, totalRows) + 1) + 'px';
+    hiderStyle.height = (headerColumnSize + this.topOverlay.sumCellSizes(0, totalRows) + 5) + 'px';
 
     this.topOverlay.adjustElementsSize(force);
     this.leftOverlay.adjustElementsSize(force);
