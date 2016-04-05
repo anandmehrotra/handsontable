@@ -688,6 +688,12 @@ const REGISTERED_HOOKS = [
   'persistentStateSave',
 
   /**
+   * Eightspokes:Used inside the populateFromArray method to enable processing of pasted text
+   * to convert them into proper objects
+   */
+  'processValueInsidePopulate',
+
+  /**
    * Fired before sorting the column. If you return `false` value then sorting will be not applied by
    * Handsontable (useful for server-side sorting).
    *
