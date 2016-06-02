@@ -4210,7 +4210,7 @@ var domHelpers = ($__helpers_47_dom_47_element__ = require("helpers/dom/element"
 var domEventHelpers = ($__helpers_47_dom_47_event__ = require("helpers/dom/event"), $__helpers_47_dom_47_event__ && $__helpers_47_dom_47_event__.__esModule && $__helpers_47_dom_47_event__ || {default: $__helpers_47_dom_47_event__});
 var HELPERS = [arrayHelpers, browserHelpers, dataHelpers, featureHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers, settingHelpers, stringHelpers, unicodeHelpers];
 var DOM = [domHelpers, domEventHelpers];
-Handsontable.buildDate = 'Tue Apr 05 2016 12:32:42 GMT-0400 (EDT)';
+Handsontable.buildDate = 'Thu Jun 02 2016 16:31:26 GMT-0400 (EDT)';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.24.1';
 var baseVersion = '@@baseVersion';
@@ -18826,6 +18826,8 @@ function checkboxRenderer(instance, TD, row, col, prop, value, cellProperties) {
   }
   function eachSelectedCheckboxCell(callback) {
     var selRange = instance.getSelectedRange();
+    if (!selRange)
+      return;
     var topLeft = selRange.getTopLeftCorner();
     var bottomRight = selRange.getBottomRightCorner();
     for (var row = topLeft.row; row <= bottomRight.row; row++) {
